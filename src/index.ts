@@ -34,21 +34,23 @@ events.on('catalog:changed', () => {
   });
 })
 
-
 events.on('product:click', ({id}: {id: string}) => {
-  const cardPreview = new CardPreview(cloneTemplate(cardPreviewTemplate), events);
   const product = appData.getCatalog().find(item => item.id === id);
+  const cardPreview = new CardPreview(cloneTemplate(cardPreviewTemplate), events);
+  cardPreview.isInCart = (appData.getCart().some(item => item.id === id)) ? true : false;
   modalPreviewContainer.content = cardPreview.render(product);
   modalPreviewContainer.open();
 });
 
-events.on('cart:add', ({id}: {id: string}) => {
-  if (appData.getCart().some(item => item.id === id)) {
-    appData.removeFromCart({id});
+events.on('cart:add', (product: CardPreview) => {
+  if (appData.getCart().some(item => item.id === product.id)) {
+    appData.removeFromCart({id: product.id});
+    product.updateButton(false);
   } else {
-    const product = appData.getCatalog().find(item => item.id === id);
-    if (product) {
-      appData.addToCart(product);
+    const newProduct = appData.getCatalog().find(item => item.id === product.id);
+    if (newProduct) {
+      appData.addToCart(newProduct);
+      product.updateButton(true);
     }
   }
 });

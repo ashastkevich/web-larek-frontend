@@ -12,7 +12,7 @@ export class CardPreview extends Component<IProduct> {
   protected cardButtonCart: HTMLButtonElement;
   protected cardButtonClose: HTMLButtonElement;
   protected productId: string;
-  // protected isIncluded: boolean = false;
+  protected isIncluded: boolean = false;
 
 
   constructor(container: HTMLElement, protected events: IEvents) {
@@ -24,13 +24,17 @@ export class CardPreview extends Component<IProduct> {
     this.cardImage = ensureElement('.card__image', this.container) as HTMLImageElement;
     this.cardButtonCart = ensureElement('.card__button', this.container) as HTMLButtonElement;
     this.cardButtonCart.addEventListener('click', () => {
-      this.events.emit('cart:add', {id: this.productId} as IProduct);
+      this.events.emit('cart:add', this);
     });
   }
 
   set id(value: string) {
     this.productId = value;
   };
+
+  get id(): string {
+    return this.productId;
+  }
 
   set category(value: string) {
     this.setText(this.cardCategory, value);
@@ -52,13 +56,20 @@ export class CardPreview extends Component<IProduct> {
     this.setImage(this.cardImage, value);
   }
 
-  // set buttonCartText(value: string) {
-  //   this.setText(this.cardButtonCart, value);
-  // }
+  set isInCart(value: boolean) {
+    this.isIncluded = value;
+  }
+ 
 
-  // updateButton(isInCart: boolean) {
-  //   this.setText(this.cardButtonCart, isInCart ? 'Удалить из корзины' : 'В корзину');
-  //   this.isIncluded = isInCart;
-  // }
+  updateButton(isInCart: boolean) {
+    this.setText(this.cardButtonCart, isInCart ? 'Удалить из корзины' : 'В корзину');
+    this.isIncluded = isInCart;
+  }
+
+  render(data: IProduct): HTMLElement {
+    super.render(data);
+    this.updateButton(this.isIncluded);
+    return this.container;
+  }  
 
 }
