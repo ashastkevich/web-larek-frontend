@@ -2,6 +2,7 @@ import { AppState } from './components/AppData';
 import { EventEmitter } from './components/base/events';
 import { CardCatalog } from './components/CardCatalog';
 import { CardPreview } from './components/CardPreview';
+import { Basket, CardBasket } from './components/Cart';
 import { LarekAPI } from './components/LarekAPI';
 import { Modal } from './components/Modal';
 import { Page } from './components/Page';
@@ -12,13 +13,32 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 
 const cardTemplate = ensureElement('#card-catalog') as HTMLTemplateElement;
 const cardPreviewTemplate = ensureElement('#card-preview') as HTMLTemplateElement;
+const basketTemplate = ensureElement('#basket') as HTMLTemplateElement;
+const cardBasketTemplate = ensureElement('#card-basket') as HTMLTemplateElement;
+const orderTemplate = ensureElement('#order') as HTMLTemplateElement;
+const contactsTemplate = ensureElement('#contacts') as HTMLTemplateElement;
+const successTemplate = ensureElement('#success') as HTMLTemplateElement;
+// const orderForm = ensureElement('')
+
 const modalPreview = ensureElement('#modal-preview');
+const modalBasket = ensureElement('#modal-basket');
+const modalOrder = ensureElement('#modal-order');
+const modalContacts = ensureElement('#modal-contacts');
+const modalSuccess = ensureElement('#modal-success');
+
+
 
 const api = new LarekAPI(CDN_URL, API_URL);
 const events = new EventEmitter();
 const appData = new AppState(events);
-const page = new Page(document.querySelector('.page') as HTMLElement);
+const page = new Page(document.querySelector('.page') as HTMLElement, events);
 const modalPreviewContainer = new Modal(modalPreview, events)
+const modalBasketContainer = new Modal(modalBasket, events);
+const modalOrderContainer = new Modal(modalOrder, events);
+const modalContactsContainer = new Modal(modalContacts, events);
+const modalSuccessContainer = new Modal(modalSuccess, events);
+const basket = new Basket(cloneTemplate(basketTemplate), events);
+
 
 
 api.getProducts()
@@ -55,11 +75,38 @@ events.on('cart:add', (product: CardPreview) => {
   }
 });
 
-events.on('cart:changed', () => {
+events.on('cartItem:remove', (product: CardBasket) => {
+  appData.removeFromCart({id: product.id});
+  events.emit('cart:change');
+})
+
+events.on('cartCount:changed', () => {
   page.render({
     cartCount: appData.getCartCount()
   })
 });
+
+events.on('cart:open', () => {
+  events.emit('cart:change');
+  modalBasketContainer.open();
+});
+
+events.on('cart:change', () => {
+  const basketHTMLArray = appData.getCart().map((basketItem, itemIndex) => new CardBasket(cloneTemplate(cardBasketTemplate), events).render({...basketItem, index: itemIndex+1}));
+  const basketHTML = basket.render({items: basketHTMLArray, total: appData.getCartTotal()});
+  if (basketHTMLArray.length === 0) {
+    basket.button = true;
+    const basketHTML = basket.render({items: 'Корзина пуста', total: appData.getCartTotal()});
+  } else basket.button = false;
+    modalBasketContainer.content = basketHTML;
+})
+
+events.on('order:open', () => {
+  modalBasketContainer.close();
+  // modalOrderContainer.content = modalOrderContainer(cloneTemplate(orderTemplate), events).render();
+  modalOrderContainer.open();
+})
+
 
 events.on('modal:open', () => {
   page.locked = true;

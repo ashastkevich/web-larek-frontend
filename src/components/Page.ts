@@ -1,5 +1,6 @@
 import { ensureElement } from "../utils/utils";
 import { Component } from "./base/Component";
+import { IEvents } from "./base/events";
 
 interface IPage {
   catalogContainer: HTMLElement[];
@@ -11,10 +12,15 @@ export class Page extends Component<IPage> {
   protected catalog: HTMLElement;
   protected cartCountElement: HTMLElement;
   protected wrapper: HTMLElement;
-  
-  constructor(container: HTMLElement) {
+  protected cartButtonElement: HTMLButtonElement;
+
+  constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
     this.catalog = ensureElement('.gallery', this.container);
+    this.cartButtonElement = ensureElement('.header__basket', this.container) as HTMLButtonElement;
+    this.cartButtonElement.addEventListener('click', () => {
+      this.events.emit('cart:open');
+    });
     this.cartCountElement = ensureElement('.header__basket-counter', this.container);
     this.wrapper = ensureElement('.page__wrapper', this.container);
 

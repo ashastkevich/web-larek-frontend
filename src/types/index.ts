@@ -1,3 +1,5 @@
+import { CardBasket } from "../components/Cart";
+
 export type PaymentType = 'online' | 'offline';
 
 export interface IProduct {
@@ -8,6 +10,7 @@ export interface IProduct {
   price: number;
   image: string;
   isIncluded?: boolean;
+  index?: number;
 }
 
 export interface IProductResponse {
@@ -15,6 +18,10 @@ export interface IProductResponse {
   items: IProduct[];
 }
 
+export interface IBasket {
+  items: HTMLElement[] | string;
+  total: number;
+}
 
 export interface IAppState {
   catalog: IProduct[];
