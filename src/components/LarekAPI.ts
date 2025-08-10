@@ -1,5 +1,5 @@
 import { Api } from "./base/api";
-import { IProduct, IProductResponse } from "../types";
+import { IOrder, IProduct, IProductResponse } from "../types";
 
 export class LarekAPI extends Api {
   readonly cdn: string;
@@ -22,6 +22,10 @@ export class LarekAPI extends Api {
 
   getProductById(id: string): Promise<IProduct> {
     return this.get<IProduct>(`/product/${id}`);
+  }
+
+  setOrder(order: IOrder): Promise<IOrder> {
+    return this.post<IOrder>(`/order`, order);
   }
 
 }

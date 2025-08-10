@@ -2,6 +2,8 @@ import { CardBasket } from "../components/Cart";
 
 export type PaymentType = 'online' | 'offline';
 
+export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+
 export interface IProduct {
   id: string;
   category: string;
@@ -12,6 +14,7 @@ export interface IProduct {
   isIncluded?: boolean;
   index?: number;
 }
+
 
 export interface IProductResponse {
   total: number;
@@ -26,16 +29,17 @@ export interface IBasket {
 export interface IAppState {
   catalog: IProduct[];
   cart: IProduct[];
+  order: IOrder;
 }
 
-export interface IOrderFrom {
-  payment: PaymentType;
+export interface IOrderForm {
+  address: string;
   email: string;
   phone: string;
-  address: string;
 }
 
-export interface IOrder extends IOrderFrom {
+export interface IOrder extends IOrderForm {
+  payment: PaymentType;
   total: number;
   items: string[];
 }
