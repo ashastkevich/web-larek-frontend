@@ -1,7 +1,6 @@
 import { AppState } from './components/AppData';
 import { EventEmitter } from './components/base/events';
-import { CardCatalog } from './components/CardCatalog';
-import { CardPreview } from './components/CardPreview';
+import { CardCatalog, CardPreview } from './components/Card';
 import { Basket, CardBasket } from './components/Cart';
 import { LarekAPI } from './components/LarekAPI';
 import { Modal } from './components/Modal';
@@ -20,15 +19,11 @@ const orderTemplate = ensureElement('#order') as HTMLTemplateElement;
 const contactsTemplate = ensureElement('#contacts') as HTMLTemplateElement;
 const successTemplate = ensureElement('#success') as HTMLTemplateElement;
 
-// const orderForm = ensureElement('')
-
 const modalPreview = ensureElement('#modal-preview');
 const modalBasket = ensureElement('#modal-basket');
 const modalOrder = ensureElement('#modal-order');
 const modalContacts = ensureElement('#modal-contacts');
 const modalSuccess = ensureElement('#modal-success');
-
-
 
 const api = new LarekAPI(CDN_URL, API_URL);
 const events = new EventEmitter();
@@ -61,7 +56,11 @@ events.on('catalog:changed', () => {
 events.on('product:click', ({id}: {id: string}) => {
   const product = appData.catalog.find(item => item.id === id);
   const cardPreview = new CardPreview(cloneTemplate(cardPreviewTemplate), events);
-  cardPreview.isInCart = (appData.cart.some(item => item.id === id)) ? true : false;
+  if (product.price === null) {
+    cardPreview.disableButton();
+  } else {
+    cardPreview.updateButton(appData.isInCart({id}));
+  }
   modalPreviewContainer.content = cardPreview.render(product);
   modalPreviewContainer.open();
 });

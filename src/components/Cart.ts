@@ -2,6 +2,7 @@ import { IBasket, IProduct } from "../types";
 import { ensureElement } from "../utils/utils";
 import { Component } from "./base/Component";
 import { IEvents } from "./base/events";
+import { Card } from "./Card";
 
 
 
@@ -36,14 +37,9 @@ export class Basket extends Component<IBasket> {
 }
 
 
-export class CardBasket extends Component<IProduct> {
+export class CardBasket extends Card<IProduct> {
   protected basketItemIndex: HTMLElement;
-  protected cardTitle: HTMLElement;
-  protected cardPrice: HTMLElement;
   protected deleteButton: HTMLButtonElement;
-  protected productId: string;
-
-
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
     this.basketItemIndex = ensureElement('.basket__item-index', this.container);
@@ -55,23 +51,9 @@ export class CardBasket extends Component<IProduct> {
     })
   }
 
-  set id(value: string) {
-    this.productId = value;
-  };
-
-  get id() {
-    return this.productId;
-  }
-
   set index(value: number) {
     this.setText(this.basketItemIndex, value.toString());
   }
 
-  set title(value: string) {
-    this.setText(this.cardTitle, value);
-  }
-
-  set price(value: number) {
-    this.setText(this.cardPrice, value);
-  }
 }
+

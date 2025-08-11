@@ -68,6 +68,10 @@ export class AppState implements IAppState {
     this.events.emit('cartCount:changed');
   }
 
+  isInCart({id}: Partial<IProduct>): boolean {
+    return this.cartList.some(p => p.id === id);
+  }
+
   clearCart(): void {
     this.cartList = [];
     this.orderList.total = this.getCartTotal();

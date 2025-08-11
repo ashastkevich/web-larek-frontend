@@ -411,23 +411,21 @@ constructor(container: HTMLElement, protected events: IEvents)
    - *Тип:* `string`  
    - *Описание:* Хранит идентификатор товара, который может использоваться для идентификации товара в системе.
 
-8. **`protected isIncluded: boolean`**  
-   - *Тип:* `boolean`  
-   - *Значение по умолчанию:* `false`  
-   - *Описание:* Флаг, указывающий на наличие товара в корзине. Используется для управления состоянием кнопки корзины.
-
-9. **`protected events: IEvents`**  
+8. **`protected events: IEvents`**  
     - *Тип:* `IEvents`  
     - *Описание:* Экземпляр системы событий, унаследованный от параметра конструктора. Используется для генерации событий.
 
 **Методы класса**
 
-1. **`updateButton(isInCart: boolean): void`**  
+1. **`disableButton(): void`**
+   - *Описание:* Блокирует кнопку "В корзину".
+
+2. **`updateButton(isInCart: boolean): void`**  
    - *Параметры:*
      - `isInCart: boolean` - флаг, указывающий находится ли товар в корзине
-   - *Описание:* Обновляет текст кнопки корзины в зависимости от состояния (`В корзину` или `Удалить из корзины`) и сохраняет текущее состояние в свойстве `isIncluded`.
+   - *Описание:* Обновляет текст кнопки корзины в зависимости от состояния (`В корзину` или `Удалить из корзины`).
 
-2. **`render(data: IProduct): HTMLElement`**  
+3. **`render(data: IProduct): HTMLElement`**  
    - *Параметры:*
      - `data: IProduct` - объект с данными о товаре
    - *Возвращает:* `HTMLElement` - контейнер компонента
@@ -458,10 +456,6 @@ constructor(container: HTMLElement, protected events: IEvents)
 6. **`set image(value: string)`**  
    - *Тип параметра:* `string`  
    - *Описание:* Обновляет источник изображения товара (`cardImage`), используя унаследованный метод `setImage`.
-
-7. **`set isInCart(value: boolean)`**  
-   - *Тип параметра:* `boolean`  
-   - *Описание:* Устанавливает флаг наличия товара в корзине (`isIncluded`).
 
 **Геттеры**
 
@@ -856,13 +850,20 @@ constructor(protected events: EventEmitter)
      - Обновляет общую сумму заказа
      - Генерирует событие `'cartCount:changed'`
 
-5. **`clearCart(): void`**  
+5. **`isInCart({id}: Partial<IProduct>): boolean`**  
+   - *Параметры:*
+     - `id: string` (из деструктурированного объекта) - ID проверяемого товара  
+   - *Описание:*
+     - Проверяет карзину на наличие товара
+     - Возвращает `true`, при наличии товара в корзине и `false` при его отсуствии
+
+6. **`clearCart(): void`**  
    - *Описание:*
      - Очищает корзину
      - Сбрасывает общую сумму заказа
      - Генерирует событие `'cartCount:changed'`
 
-6. **`setOrderField(field: keyof IOrderForm, value: string): void`**  
+7. **`setOrderField(field: keyof IOrderForm, value: string): void`**  
    - *Параметры:*
      - `field: keyof IOrderForm` - поле заказа для обновления
      - `value: string` - новое значение поля  
@@ -870,7 +871,7 @@ constructor(protected events: EventEmitter)
      - Обновляет указанное поле в заказе
      - Вызывает валидацию заказа
 
-7. **`validateOrder(): boolean`**  
+8. **`validateOrder(): boolean`**  
    - *Возвращает:* `boolean` - результат валидации (true если ошибок нет)  
    - *Описание:*
      - Проверяет обязательные поля заказа (адрес, email, телефон)
