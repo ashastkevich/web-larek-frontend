@@ -10,7 +10,6 @@ export class CardPreview extends Component<IProduct> {
   protected cardPrice: HTMLElement;
   protected cardImage: HTMLImageElement;
   protected cardButtonCart: HTMLButtonElement;
-  protected cardButtonClose: HTMLButtonElement;
   protected productId: string;
   protected isIncluded: boolean = false;
 

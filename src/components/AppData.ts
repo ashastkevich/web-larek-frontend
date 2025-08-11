@@ -15,8 +15,6 @@ export class AppState implements IAppState {
   formErrors: FormErrors = {};
 
   constructor(protected events: EventEmitter) {
-    
-
   }
 
   set catalog(catalog: IProduct[]) {
@@ -47,11 +45,6 @@ export class AppState implements IAppState {
   getCartCount(): number {
     return this.cartList.length;
   }
-
-  // getOrder(): IOrder {
-  //   return this.order;
-  // }
-
 
   getCartTotal(): number {
     let sum = 0;

@@ -38,8 +38,6 @@ export class Order extends Form<IOrder> {
       this.setDisabled(this._submit, true);
     }
   }
-
-
 }
 
 
@@ -56,7 +54,6 @@ set phone(value: string) {
   (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
 }
 
-
 set enable(data: {email: string, phone: string}) {
   if (data.email && data.phone) {
     this.setDisabled(this._submit, false);
@@ -64,7 +61,6 @@ set enable(data: {email: string, phone: string}) {
     this.setDisabled(this._submit, true);
   }
 }
-
 }
 
 
@@ -84,5 +80,4 @@ export class Success extends Component <IOrder> {
   set total(value: number) {
     this.setText(this.orderSuccessDescription, `Списано ${value} синапсов`);
   }
-
 }

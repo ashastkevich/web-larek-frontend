@@ -74,6 +74,4 @@ export class CardBasket extends Component<IProduct> {
   set price(value: number) {
     this.setText(this.cardPrice, value);
   }
-
-
 }
